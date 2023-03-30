@@ -15,9 +15,12 @@ var (
 	end        int
 	maxstatind int
 
-	maxstat line
+	maxstat      line
+	maxstatcache line
 
 	lines []line
+
+	returnlines []int
 )
 
 func input() {
@@ -45,29 +48,18 @@ func sort(line []line, i int) {
 		} else {
 			break
 		}
-
-	}
-
-	if lines[len(lines)-1].start == lines[len(lines)].start {
-		if lines[len(lines)-1].end < lines[len(lines)].end {
-			lines[len(lines)-1], lines[len(lines)] = lines[len(lines)], lines[len(lines)-1]
-		}
 	}
 }
 
 func trains() {
-
 	var i, u int
-
 	i, u = maxstatind, maxstatind
 
 	for ; true; u++ {
 		if lines[i].end < lines[u].start {
 			break
 		}
-		fmt.Println(maxstat)
 		if lines[i].start == lines[u].start {
-
 		} else {
 			if lines[u].end > maxstat.end {
 				maxstat = lines[u]
@@ -79,20 +71,20 @@ func trains() {
 
 func main() {
 	input()
-
-	//for true {
+	sort(lines, maxstatind)
+	returnlines = append(returnlines, lines[0].index)
 
 	for {
-
+		trains()
+		returnlines = append(returnlines, maxstat.index)
 		if maxstat.end == stationsc {
+			fmt.Println(len(returnlines) - 1)
+			fmt.Println(returnlines)
+			break
+		} else if maxstat == maxstatcache {
+			fmt.Println(-1)
 			break
 		}
-		sort(lines, maxstatind)
-		trains()
+		maxstatcache = maxstat
 	}
-
-	fmt.Println(lines)
-	fmt.Println(maxstat)
-
-	//}
 }
